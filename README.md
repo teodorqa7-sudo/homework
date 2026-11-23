@@ -39,6 +39,9 @@ mvn test
 
 # Live UI scenarios (need network): back-office login + Sauce Demo checkout
 mvn -pl ui -am test "-Dcucumber.filter.tags=@live"
+
+# Live API scenario (needs network): Petstore user create + retrieve
+mvn -pl api -am test "-Dcucumber.filter.tags=@live"
 ```
 
 ### Install Playwright browsers (one-off per machine)
