@@ -34,8 +34,11 @@ mvn -pl api -am test
 # UI smoke (needs Playwright browsers, see below; runs against a bundled local page by default)
 mvn -pl ui -am test
 
-# Everything (common + core + ui + api)
+# Everything (common + core + ui + api) - offline suite, @live is excluded
 mvn test
+
+# Live UI scenario against the public demo back-office (needs network access)
+mvn -pl ui -am test "-Dcucumber.filter.tags=@live"
 ```
 
 ### Install Playwright browsers (one-off per machine)

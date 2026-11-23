@@ -7,8 +7,9 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * Bound from {@code application.properties} in the ui module.
  *
  * <pre>
- * ui.baseUrl=            # empty -> run the bundled offline smoke page
- * ui.browser=chromium    # chromium | firefox | webkit
+ * ui.baseUrl=                                         # empty -> run the bundled offline smoke page
+ * ui.backOfficeBaseUrl=https://.../back-office/pages   # live demo site used by @live scenarios
+ * ui.browser=chromium                                 # chromium | firefox | webkit
  * ui.headless=true
  * ui.defaultTimeoutMs=10000
  * </pre>
@@ -16,6 +17,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @ConfigurationProperties(prefix = "ui")
 public record UiProperties(
         @DefaultValue("") String baseUrl,
+        @DefaultValue("https://automationplayground.com/back-office/pages") String backOfficeBaseUrl,
         @DefaultValue("chromium") String browser,
         @DefaultValue("true") boolean headless,
         @DefaultValue("10000") long defaultTimeoutMs
