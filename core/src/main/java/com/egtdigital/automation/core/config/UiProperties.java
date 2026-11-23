@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  *
  * <pre>
  * ui.baseUrl=                                         # empty -> run the bundled offline smoke page
- * ui.backOfficeBaseUrl=https://.../back-office/pages   # live demo site used by @live scenarios
+ * ui.backOfficeBaseUrl=https://.../back-office/pages   # @live back-office login
+ * ui.sauceDemoBaseUrl=https://www.saucedemo.com        # @live Sauce Demo checkout
+ * ui.sauceDemoPassword=secret_sauce                    # public demo password; override via SAUCE_DEMO_PASSWORD
  * ui.browser=chromium                                 # chromium | firefox | webkit
  * ui.headless=true
  * ui.defaultTimeoutMs=10000
@@ -18,6 +20,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 public record UiProperties(
         @DefaultValue("") String baseUrl,
         @DefaultValue("https://automationplayground.com/back-office/pages") String backOfficeBaseUrl,
+        @DefaultValue("https://www.saucedemo.com") String sauceDemoBaseUrl,
+        @DefaultValue("secret_sauce") String sauceDemoPassword,
         @DefaultValue("chromium") String browser,
         @DefaultValue("true") boolean headless,
         @DefaultValue("10000") long defaultTimeoutMs

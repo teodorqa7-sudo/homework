@@ -37,7 +37,7 @@ mvn -pl ui -am test
 # Everything (common + core + ui + api) - offline suite, @live is excluded
 mvn test
 
-# Live UI scenario against the public demo back-office (needs network access)
+# Live UI scenarios (need network): back-office login + Sauce Demo checkout
 mvn -pl ui -am test "-Dcucumber.filter.tags=@live"
 ```
 

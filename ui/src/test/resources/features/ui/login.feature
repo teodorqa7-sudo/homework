@@ -11,8 +11,6 @@ Feature: Back-office login
   Scenario: The login form is displayed
     Then the login form is displayed
 
-  # The demo site performs no real authentication: the "Login" anchor only navigates to index.html,
-  # so any non-empty credentials reach the dashboard.
   Scenario: Signing in opens the dashboard
     When I sign in as "mentor@example.com" with password "Secret123!"
     Then the back-office dashboard is displayed
