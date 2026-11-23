@@ -1,0 +1,28 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test / report output
+playwright-report/
+test-results/
+traces/
+*.log
+screenshots/
+
+# Local overrides (never commit secrets)
+*-local.properties
+.env
