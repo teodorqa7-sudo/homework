@@ -29,7 +29,7 @@
         <cucumber.version>7.20.1</cucumber.version>
         <playwright.version>1.53.0</playwright.version>
         <datafaker.version>2.4.2</datafaker.version>
-        <lombok.version>1.18.40</lombok.version>
+        <lombok.version>1.18.46</lombok.version>
 
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>

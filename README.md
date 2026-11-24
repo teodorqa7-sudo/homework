@@ -83,6 +83,7 @@ Leaving them empty keeps the offline smoke behaviour (bundled page / in-process 
 2. Right-click the class → **Run 'UiCucumberRunner'**.
 3. The run configuration icon must be **JUnit** (letter J), not Cucumber.
 4. Do **not** run a `.feature` file directly — the IDE then uses the Cucumber CLI and ignores `@SelectClasspathResource`.
+5. Live scenarios are excluded by `cucumber.properties` (`cucumber.filter.tags=not @live`). To run the Sauce Demo checkout from the IDE, run `CheckoutCucumberSuite` — it pins `@checkout` via `@ConfigurationParameter` — or add `-Dcucumber.filter.tags=@checkout` to the run configuration's **VM options** (not program arguments). Classes named `*Suite` are not matched by the surefire include patterns, so `mvn test` stays offline.
 
 ## Conventions that keep the build healthy
 
