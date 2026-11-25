@@ -66,6 +66,25 @@ mvn -pl ui exec:java "-Dexec.args=install webkit"
 
 Set `PLAYWRIGHT_BROWSERS_PATH` if browsers must live outside the default cache.
 
+## Watching the tests run (demo mode)
+
+Headless is on by default, so a scenario finishes before you can see anything. Three properties change that:
+
+```
+# ui/src/test/resources/application.properties
+ui.headless=false     # show the browser window
+ui.slowMoMs=500       # ms added to every Playwright action (click, fill, navigate)
+ui.stepDelayMs=1000   # ms pause after every step of a @browser scenario
+```
+
+All three are off by default (`headless=true`, the delays `0`), so normal and CI runs keep their speed. They can also be overridden per run without editing the file:
+
+```
+mvn -pl ui -am test "-Dcucumber.filter.tags=@checkout" "-Dui.headless=false" "-Dui.slowMoMs=800" "-Dui.stepDelayMs=1500"
+```
+
+Note: `ui.stepDelayMs` uses `Thread.sleep` on purpose — it is a presentation aid, not a synchronisation mechanism. Never use sleeps instead of Playwright's auto-waiting in real assertions.
+
 ## Pointing tests at a real environment
 
 Edit `ui/src/test/resources/application.properties` and `api/src/test/resources/application.properties`:
@@ -84,6 +103,15 @@ Leaving them empty keeps the offline smoke behaviour (bundled page / in-process 
 3. The run configuration icon must be **JUnit** (letter J), not Cucumber.
 4. Do **not** run a `.feature` file directly — the IDE then uses the Cucumber CLI and ignores `@SelectClasspathResource`.
 5. Live scenarios are excluded by `cucumber.properties` (`cucumber.filter.tags=not @live`). To run the Sauce Demo checkout from the IDE, run `CheckoutCucumberSuite` — it pins `@checkout` via `@ConfigurationParameter` — or add `-Dcucumber.filter.tags=@checkout` to the run configuration's **VM options** (not program arguments). Classes named `*Suite` are not matched by the surefire include patterns, so `mvn test` stays offline.
+
+## Editor setup (VS Code)
+
+`.vscode/settings.json` is committed and points both popular Cucumber extensions at the step definitions, so Gherkin steps resolve to `*StepDef` methods instead of showing up as undefined:
+
+- `cucumberautocomplete.*` → Cucumber (Gherkin) Full Support
+- `cucumber.glue` / `cucumber.features` → official Cucumber extension
+
+Everything else under `.vscode/` stays git-ignored. If steps still render as unresolved after pulling, reload the window: `Ctrl+Shift+P` → **Developer: Reload Window**. IntelliJ resolves steps without any of this (Cucumber for Java plugin + test sources roots).
 
 ## Conventions that keep the build healthy
 

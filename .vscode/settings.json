@@ -1,0 +1,22 @@
+{
+  // --- Cucumber (Gherkin) Full Support  (alexkrechik.cucumberautocomplete) ---
+  "cucumberautocomplete.steps": [
+    "ui/src/test/java/**/stepdefinitions/*.java",
+    "api/src/test/java/**/stepdefinitions/*.java"
+  ],
+  "cucumberautocomplete.syncfeatures": "{ui,api}/src/test/resources/features/**/*.feature",
+  "cucumberautocomplete.strictGherkinCompletion": false,
+
+  // --- Official Cucumber extension  (CucumberOpen.cucumber-official) ---
+  "cucumber.glue": [
+    "ui/src/test/java/com/egtdigital/automation/ui/stepdefinitions",
+    "api/src/test/java/com/egtdigital/automation/api/stepdefinitions"
+  ],
+  "cucumber.features": [
+    "ui/src/test/resources/features",
+    "api/src/test/resources/features"
+  ],
+
+  "files.encoding": "utf8",
+  "files.eol": "\n"
+}
