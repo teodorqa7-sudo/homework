@@ -34,13 +34,15 @@ mvn -pl api -am test
 # UI smoke (needs Playwright browsers, see below; runs against a bundled local page by default)
 mvn -pl ui -am test
 
-# Everything (common + core + ui + api) - offline suite, @live is excluded
+# Everything (common + core + ui + api). Includes the @live scenarios, so this needs network
+# access and installed Playwright browsers.
 mvn test
 
-# Live UI scenarios (need network): back-office login + Sauce Demo checkout
-mvn -pl ui -am test "-Dcucumber.filter.tags=@live"
+# Offline only - skips every @live scenario
+mvn test "-Dcucumber.filter.tags=not @live"
 
-# Live API scenario (needs network): Petstore user create + retrieve
+# Only the live groups
+mvn -pl ui -am test "-Dcucumber.filter.tags=@live"
 mvn -pl api -am test "-Dcucumber.filter.tags=@live"
 ```
 
@@ -107,7 +109,7 @@ Credentials are never stored in feature files. Passwords are resolved from envir
 2. Right-click the class → **Run 'UiCucumberRunner'**.
 3. The run configuration icon must be **JUnit** (letter J), not Cucumber.
 4. Do **not** run a `.feature` file directly — the IDE then uses the Cucumber CLI and ignores `@SelectClasspathResource`.
-5. Live scenarios are excluded by `cucumber.properties` (`cucumber.filter.tags=not @live`). To run the Sauce Demo checkout from the IDE, run `CheckoutCucumberSuite` — it pins `@checkout` via `@ConfigurationParameter` — or add `-Dcucumber.filter.tags=@checkout` to the run configuration's **VM options** (not program arguments). Classes named `*Suite` are not matched by the surefire include patterns, so `mvn test` stays offline.
+5. Every scenario runs by default, including the `@live` ones — they need network access and installed Playwright browsers. To run just one group from the IDE, use `LoginCucumberSuite` / `CheckoutCucumberSuite` (they pin `@login` / `@checkout` via `@ConfigurationParameter`) or add `-Dcucumber.filter.tags=@checkout` to the run configuration's **VM options** (not program arguments). Classes named `*Suite` are not matched by the surefire include patterns, so Maven ignores them.
 
 ## Editor setup (VS Code)
 

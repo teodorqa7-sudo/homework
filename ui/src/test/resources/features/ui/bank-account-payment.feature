@@ -1,4 +1,4 @@
-@ui @homework @browser
+@ui @homework
 Feature: Bank account deposit
 
   As a player

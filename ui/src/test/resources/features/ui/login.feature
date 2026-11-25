@@ -1,4 +1,4 @@
-@ui @login @browser
+@ui @login @live @browser
 Feature: Back-office login
 
   As a back-office user
