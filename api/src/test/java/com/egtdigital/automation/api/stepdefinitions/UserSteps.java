@@ -10,6 +10,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Petstore user lifecycle: create with Faker data -> carry it in the scenario context -> read it back
  * by username -> compare the two objects with soft assertions and with a recursive comparison.
  */
+@RequiredArgsConstructor
 public class UserSteps {
 
     private static final String CREATED_USER_KEY = "petstore.createdUser";
@@ -26,15 +28,10 @@ public class UserSteps {
     private final ScenarioContext context;
     private final ApiProperties properties;
 
-    public UserSteps(ScenarioContext context, ApiProperties properties) {
-        this.context = context;
-        this.properties = properties;
-    }
-
     @When("I create a new petstore user")
     public void iCreateANewPetstoreUser() {
         UserDto user = UserFactory.randomUser();
-        Response response = new UserApiClient(properties.petstoreBaseUrl()).create(user);
+        Response response = new UserApiClient(properties.petstoreBaseUrl(), properties.timeoutMs()).create(user);
         assertThat(response.statusCode()).isEqualTo(200);
         context.put(CREATED_USER_KEY, user);
     }
@@ -42,7 +39,7 @@ public class UserSteps {
     @And("I can retrieve the same user by username")
     public void iCanRetrieveTheSameUserByUsername() {
         UserDto created = createdUser();
-        Response response = new UserApiClient(properties.petstoreBaseUrl())
+        Response response = new UserApiClient(properties.petstoreBaseUrl(), properties.timeoutMs())
                 .getByUsername(created.getUsername());
         assertThat(response.statusCode()).isEqualTo(200);
         context.put(RETRIEVED_USER_KEY, JsonUtils.fromJson(response.asString(), UserDto.class));

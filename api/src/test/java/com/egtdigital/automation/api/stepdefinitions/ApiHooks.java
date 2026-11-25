@@ -6,37 +6,44 @@ import com.egtdigital.automation.core.context.ScenarioContext;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.restassured.RestAssured;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class ApiHooks {
 
     public static final String BASE_URI_KEY = "api.baseUri";
     public static final String RESPONSE_KEY = "api.response";
+    public static final String STUB_SERVER_KEY = "api.stubServer";
 
-    private final StubApiServer stubApiServer;
     private final ApiProperties properties;
     private final ScenarioContext context;
 
-    public ApiHooks(StubApiServer stubApiServer, ApiProperties properties, ScenarioContext context) {
-        this.stubApiServer = stubApiServer;
-        this.properties = properties;
-        this.context = context;
-    }
-
-    @Before(order = 0)
+    /**
+     * The stub is scenario state, never an application-wide bean: a fresh instance is created here,
+     * kept in the scenario-scoped context and stopped in {@link #cleanUp()}.
+     *
+     * <p>{@code @live} scenarios talk to a real service, so they skip the stub entirely.
+     */
+    @Before(value = "not @live", order = 0)
     public void startStubServer() {
-        stubApiServer.start();
-        context.put(BASE_URI_KEY, resolveBaseUri());
+        StubApiServer server = new StubApiServer();
+        server.start();
+        context.put(STUB_SERVER_KEY, server);
+        context.put(BASE_URI_KEY, resolveBaseUri(server));
     }
 
     @After(order = 0)
     public void cleanUp() {
-        stubApiServer.stop();
+        context.find(STUB_SERVER_KEY)
+                .filter(StubApiServer.class::isInstance)
+                .map(StubApiServer.class::cast)
+                .ifPresent(StubApiServer::stop);
         RestAssured.reset();
         context.clear();
     }
 
-    private String resolveBaseUri() {
+    private String resolveBaseUri(StubApiServer server) {
         String configured = properties.baseUrl();
-        return (configured == null || configured.isBlank()) ? stubApiServer.baseUri() : configured;
+        return (configured == null || configured.isBlank()) ? server.baseUri() : configured;
     }
 }

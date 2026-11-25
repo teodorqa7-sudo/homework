@@ -2,7 +2,6 @@ package com.egtdigital.automation.api.support;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,11 +9,13 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Minimal in-process HTTP stub on a random port so the API smoke scenario runs
- * offline and deterministically. Replace with the real environment via
- * `api.baseUrl` in application.properties.
+ * Minimal in-process HTTP stub on a random port so the API smoke scenario runs offline and
+ * deterministically.
+ *
+ * <p>Deliberately <b>not</b> a Spring bean: a running server is scenario state. {@code ApiHooks}
+ * creates a fresh instance per scenario and stops it in the {@code @After} hook, so one scenario can
+ * never shut down the server another scenario is still using.
  */
-@Component
 public class StubApiServer {
 
     private static final String HEALTH_BODY = "{\"status\":\"UP\"}";

@@ -14,6 +14,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.RequiredArgsConstructor;
 
 import java.util.regex.Pattern;
 
@@ -25,6 +26,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
  * <p>Note: Playwright's {@code hasText(String)} is an exact, whitespace-normalized match. Use
  * {@code containsText(...)} or {@code hasText(Pattern)} whenever only part of the text is known.
  */
+@RequiredArgsConstructor
 public class CheckoutSteps {
 
     private static final String PASSWORD_ENVIRONMENT_VARIABLE = "SAUCE_DEMO_PASSWORD";
@@ -32,11 +34,6 @@ public class CheckoutSteps {
 
     private final ScenarioContext context;
     private final UiProperties properties;
-
-    public CheckoutSteps(ScenarioContext context, UiProperties properties) {
-        this.context = context;
-        this.properties = properties;
-    }
 
     @Given("I am signed in to the Sauce Demo shop as {string}")
     public void iAmSignedInToTheSauceDemoShopAs(String username) {

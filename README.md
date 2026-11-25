@@ -96,6 +96,11 @@ api.baseUrl=https://staging.example.com
 
 Leaving them empty keeps the offline smoke behaviour (bundled page / in-process stub). **Never commit passwords or tokens** — use `EnvironmentProvider.resolve(...)` or environment variables.
 
+Credentials are never stored in feature files. Passwords are resolved from environment variables first, then from `application.properties`:
+
+- `BACK_OFFICE_PASSWORD` → `ui.backOfficePassword` (back-office login)
+- `SAUCE_DEMO_PASSWORD` → `ui.sauceDemoPassword` (Sauce Demo)
+
 ## Running from IntelliJ
 
 1. Open `UiCucumberRunner` (or `ApiCucumberRunner`).

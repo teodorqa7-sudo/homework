@@ -20,8 +20,4 @@ public final class EnvironmentProvider {
         }
         return fallback;
     }
-
-    public static boolean resolveBoolean(String key, boolean fallback) {
-        return Boolean.parseBoolean(resolve(key, Boolean.toString(fallback)));
-    }
 }

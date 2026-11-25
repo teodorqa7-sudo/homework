@@ -12,7 +12,7 @@ import com.microsoft.playwright.options.AriaRole;
  * card, so no per-product id has to be hard-coded.
  *
  * <p>{@code pageTitle()} returns the in-page title element, not the browser tab title
- * ({@link BasePage#title()}).
+ * ({@code page.title()}).
  */
 public class InventoryPage extends BasePage {
 

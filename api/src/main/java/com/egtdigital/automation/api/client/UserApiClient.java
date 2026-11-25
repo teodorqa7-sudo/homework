@@ -15,8 +15,8 @@ public class UserApiClient extends BaseApiClient {
     private static final String USER_PATH = "/user";
     private static final String USER_BY_USERNAME_PATH = "/user/{username}";
 
-    public UserApiClient(String baseUri) {
-        super(baseUri);
+    public UserApiClient(String baseUri, long timeoutMs) {
+        super(baseUri, timeoutMs);
     }
 
     public Response create(UserDto user) {

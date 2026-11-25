@@ -1,7 +1,6 @@
 package com.egtdigital.automation.ui.pages.saucedemo;
 
 import com.egtdigital.automation.ui.pages.BasePage;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 /**
@@ -18,26 +17,10 @@ public class CheckoutInfoPage extends BasePage {
         super(page);
     }
 
-    public Locator firstName() {
-        return page.locator(FIRST_NAME);
-    }
-
-    public Locator lastName() {
-        return page.locator(LAST_NAME);
-    }
-
-    public Locator postalCode() {
-        return page.locator(POSTAL_CODE);
-    }
-
-    public Locator continueButton() {
-        return page.locator(CONTINUE);
-    }
-
     public void fill(String firstName, String lastName, String postalCode) {
-        firstName().fill(firstName);
-        lastName().fill(lastName);
-        postalCode().fill(postalCode);
-        continueButton().click();
+        page.locator(FIRST_NAME).fill(firstName);
+        page.locator(LAST_NAME).fill(lastName);
+        page.locator(POSTAL_CODE).fill(postalCode);
+        page.locator(CONTINUE).click();
     }
 }

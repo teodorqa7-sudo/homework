@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Per-scenario shared state. Cucumber Spring provides the {@code cucumber-glue}
- * scope, so a fresh instance exists for every scenario.
+ * Per-scenario shared state. Cucumber Spring provides the {@code cucumber-glue} scope, so a fresh
+ * instance exists for every scenario and for every thread.
  */
 @Component
 @Scope("cucumber-glue")
@@ -31,14 +31,6 @@ public class ScenarioContext {
 
     public Optional<Object> find(String key) {
         return Optional.ofNullable(values.get(key));
-    }
-
-    public boolean contains(String key) {
-        return values.containsKey(key);
-    }
-
-    public void remove(String key) {
-        values.remove(key);
     }
 
     public void clear() {

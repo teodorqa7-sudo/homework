@@ -6,8 +6,8 @@ public class HealthApiClient extends BaseApiClient {
 
     private static final String HEALTH_PATH = "/health";
 
-    public HealthApiClient(String baseUri) {
-        super(baseUri);
+    public HealthApiClient(String baseUri, long timeoutMs) {
+        super(baseUri, timeoutMs);
     }
 
     public Response getHealth() {

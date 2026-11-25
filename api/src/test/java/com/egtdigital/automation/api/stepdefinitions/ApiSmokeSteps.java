@@ -1,25 +1,25 @@
 package com.egtdigital.automation.api.stepdefinitions;
 
 import com.egtdigital.automation.api.client.HealthApiClient;
+import com.egtdigital.automation.core.config.ApiProperties;
 import com.egtdigital.automation.core.context.ScenarioContext;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import lombok.RequiredArgsConstructor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RequiredArgsConstructor
 public class ApiSmokeSteps {
 
     private final ScenarioContext context;
-
-    public ApiSmokeSteps(ScenarioContext context) {
-        this.context = context;
-    }
+    private final ApiProperties properties;
 
     @When("I request the API health endpoint")
     public void iRequestTheApiHealthEndpoint() {
         String baseUri = context.get(ApiHooks.BASE_URI_KEY, String.class);
-        Response response = new HealthApiClient(baseUri).getHealth();
+        Response response = new HealthApiClient(baseUri, properties.timeoutMs()).getHealth();
         context.put(ApiHooks.RESPONSE_KEY, response);
     }
 

@@ -19,7 +19,6 @@ public class LoginPage extends BasePage {
     private static final String LOGIN_PATH = "/login.html";
     private static final String EMAIL = "input[name='email']";
     private static final String PASSWORD = "input[name='password']";
-    private static final String LOGIN_LINK = "a.btn.btn-success";
 
     public LoginPage(Page page) {
         super(page);
@@ -39,10 +38,6 @@ public class LoginPage extends BasePage {
 
     public Locator password() {
         return page.locator(PASSWORD);
-    }
-
-    public Locator rememberMe() {
-        return page.getByRole(AriaRole.CHECKBOX, new Page.GetByRoleOptions().setName("Remember Me"));
     }
 
     public Locator loginLink() {

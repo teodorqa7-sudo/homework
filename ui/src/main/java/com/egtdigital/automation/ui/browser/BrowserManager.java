@@ -11,59 +11,47 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 /**
- * Owns the Playwright lifecycle for a single scenario: Playwright -> Browser -> Context -> Page.
- * Always closed from the Cucumber @After hook so no browser process leaks between scenarios.
+ * Factory for a per-scenario Playwright stack.
+ *
+ * <p>Deliberately <b>stateless</b>. This is a singleton Spring bean, so it must never hold a
+ * {@link Playwright}, {@link Browser}, {@link BrowserContext} or {@link Page}: that would put one
+ * scenario's state in an application-wide object and make parallel execution close other scenarios'
+ * browsers. Everything lives in the returned {@link BrowserSession}, which is stored in the
+ * scenario-scoped {@code ScenarioContext} and closed at the end of the scenario.
  */
 @Component
-public class BrowserManager implements AutoCloseable {
+public class BrowserManager {
 
-    private Playwright playwright;
-    private Browser browser;
-    private BrowserContext context;
-    private Page page;
+    public BrowserSession start(UiProperties properties) {
+        Playwright playwright = Playwright.create();
+        try {
+            Browser browser = launch(playwright, properties);
+            BrowserContext context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1440, 900));
+            Page page = context.newPage();
+            page.setDefaultTimeout(properties.defaultTimeoutMs());
+            return new BrowserSession(playwright, browser, context, page);
+        } catch (RuntimeException e) {
+            // never leak a driver process when the launch fails half way
+            try {
+                playwright.close();
+            } catch (RuntimeException closeFailure) {
+                e.addSuppressed(closeFailure);
+            }
+            throw e;
+        }
+    }
 
-    public Page start(UiProperties properties) {
-        close();
-        playwright = Playwright.create();
-
+    private static Browser launch(Playwright playwright, UiProperties properties) {
         BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
-                .setHeadless(properties.headless());
+                .setHeadless(properties.headless())
+                .setSlowMo(properties.slowMoMs());
 
-        browser = switch (properties.browser().toLowerCase(Locale.ROOT)) {
+        return switch (properties.browser().toLowerCase(Locale.ROOT)) {
             case "chromium" -> playwright.chromium().launch(launchOptions);
             case "firefox" -> playwright.firefox().launch(launchOptions);
             case "webkit" -> playwright.webkit().launch(launchOptions);
             default -> throw new IllegalArgumentException(
                     "Unsupported browser '" + properties.browser() + "'. Supported values: chromium, firefox, webkit.");
         };
-
-        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1440, 900));
-        page = context.newPage();
-        page.setDefaultTimeout(properties.defaultTimeoutMs());
-        return page;
-    }
-
-    public Page page() {
-        if (page == null) {
-            throw new IllegalStateException("Browser has not been started for this scenario");
-        }
-        return page;
-    }
-
-    @Override
-    public void close() {
-        if (context != null) {
-            context.close();
-            context = null;
-        }
-        if (browser != null) {
-            browser.close();
-            browser = null;
-        }
-        if (playwright != null) {
-            playwright.close();
-            playwright = null;
-        }
-        page = null;
     }
 }

@@ -1,4 +1,4 @@
-@ui @checkout @live @browser
+@ui @checkout @browser
 Feature: Sauce Demo checkout
 
   As an online shopper

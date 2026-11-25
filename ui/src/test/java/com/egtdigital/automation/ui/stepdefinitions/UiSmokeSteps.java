@@ -6,6 +6,7 @@ import com.egtdigital.automation.ui.pages.SmokePage;
 import com.microsoft.playwright.Page;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import lombok.RequiredArgsConstructor;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -14,17 +15,13 @@ import java.util.Objects;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+@RequiredArgsConstructor
 public class UiSmokeSteps {
 
     private static final String LOCAL_SMOKE_PAGE = "pages/smoke.html";
 
     private final ScenarioContext context;
     private final UiProperties properties;
-
-    public UiSmokeSteps(ScenarioContext context, UiProperties properties) {
-        this.context = context;
-        this.properties = properties;
-    }
 
     @Given("the UI smoke page is open")
     public void theUiSmokePageIsOpen() {

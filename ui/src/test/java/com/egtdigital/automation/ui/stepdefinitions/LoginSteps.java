@@ -2,28 +2,27 @@ package com.egtdigital.automation.ui.stepdefinitions;
 
 import com.egtdigital.automation.core.config.UiProperties;
 import com.egtdigital.automation.core.context.ScenarioContext;
+import com.egtdigital.automation.core.provider.EnvironmentProvider;
 import com.egtdigital.automation.ui.pages.DashboardPage;
 import com.egtdigital.automation.ui.pages.LoginPage;
 import com.microsoft.playwright.Page;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.RequiredArgsConstructor;
 
 import java.util.regex.Pattern;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
+@RequiredArgsConstructor
 public class LoginSteps {
 
     private static final Pattern DASHBOARD_URL = Pattern.compile(".*/index\\.html$");
+    private static final String PASSWORD_ENVIRONMENT_VARIABLE = "BACK_OFFICE_PASSWORD";
 
     private final ScenarioContext context;
     private final UiProperties properties;
-
-    public LoginSteps(ScenarioContext context, UiProperties properties) {
-        this.context = context;
-        this.properties = properties;
-    }
 
     @Given("the back-office login page is open")
     public void theBackOfficeLoginPageIsOpen() {
@@ -39,8 +38,15 @@ public class LoginSteps {
         assertThat(loginPage.loginLink()).isVisible();
     }
 
-    @When("I sign in as {string} with password {string}")
-    public void iSignInAsWithPassword(String email, String password) {
+    /**
+     * The password never appears in the feature file: environment variable first, then
+     * {@code ui.backOfficePassword}. The public demo performs no authentication, so an empty value
+     * still works; a real environment must supply {@code BACK_OFFICE_PASSWORD}.
+     */
+    @When("I sign in as {string}")
+    public void iSignInAs(String email) {
+        String password = EnvironmentProvider.resolve(
+                PASSWORD_ENVIRONMENT_VARIABLE, properties.backOfficePassword());
         loginPage().login(email, password);
     }
 

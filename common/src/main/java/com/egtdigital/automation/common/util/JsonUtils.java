@@ -17,10 +17,6 @@ public final class JsonUtils {
     private JsonUtils() {
     }
 
-    public static ObjectMapper mapper() {
-        return MAPPER;
-    }
-
     public static String toJson(Object value) {
         try {
             return MAPPER.writeValueAsString(value);
